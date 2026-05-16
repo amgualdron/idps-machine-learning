@@ -1,0 +1,59 @@
+CspTm:
+  sequence: GPGMRGKVKWFDSKKGYGFITKDEGGDVFVHWSAIEMEGFKTLKEGQVVEFEIQEGKKGGQAAHVKV
+  length: 67
+  description: "Cold shock protein from Thermotoga maritima. Benchmark IDP with well-characterized Rg from smFRET. Used in original HPS parameterization (Dignon et al. 2018)."
+
+Protein_IN:
+  sequence: GSHCFLDGIDKAQEEHEKYHSNWRAMASDFNLPPVVAKEIVASCDKCQLKGEAMHGQVDC
+  length: 60
+  description: "N-terminal domain of HIV-1 integrase. Disordered in isolation. HPS benchmark sequence (Dignon et al. 2018)."
+
+ProTa_N:
+  sequence: GPSDAAVDTSSEITTKDLKEKKEVVEEAENGRDAPANGNAENEENGEQEADNEVDEECEEGGEEEEEEEEGDGEEEDGDEDEEAESATGKRAAEDDEDDDVDTKKQKTDEDD
+  length: 112
+  description: "N-terminal domain of Prothymosin alpha. Highly negatively charged IDP. HPS benchmark sequence (Dignon et al. 2018)."
+
+ProTa_C:
+  sequence: MAHHHHHHSAALEVLFQGPMSDAAVDTSSEITTKDLKEKKEVVEEAENGRDAPANGNANEENGEQEADNEVDEECEEGGEEEEEEEEGDGEEEDGDEDEEAESATGKRAAEDDEDDDVDTKKQKTDEDD
+  length: 129
+  description: "C-terminal domain of Prothymosin alpha. Note: contains His-tag purification artifact (MAHHHHHH) at N-terminus. HPS benchmark sequence (Dignon et al. 2018)."
+
+R15:
+  sequence: KLKEANKQQNFNTGIKDFDFWLSEVEALLASEDYGKDLASVNNLLKKHQLLEADISAHEDRLKDLNSQADSLMTSSAFDTSQVKDKRETINGRFQRIKSMAAARRAKLNESHRL
+  length: 114
+  description: "Disordered linker region. HPS benchmark sequence (Dignon et al. 2018)."
+
+R17:
+  sequence: RLEESLEYQQFVANVEEEEAWINEKMTLVASEDYGDTLAAIQGLLKKHEAFETDFTVHKDRVNDVAANGEDLIKKNNHHVENITAKMKGLKGKVSDLEKA
+  length: 100
+  description: "Disordered linker region. HPS benchmark sequence (Dignon et al. 2018)."
+
+hCyp:
+  sequence: SSFHRIIPGFMSQGGDFTRHNGTGGKSIYGEKFEDENFILKHTGPGILSMANAGPNTNGSQFFISTAKTEFLDGKHVVFGKVKEGMNIVEAMERFGSRNGKTSKKITIADSGQLE
+  length: 167
+  description: "Human Cyclophilin D disordered region. HPS benchmark sequence (Dignon et al. 2018)."
+
+Protein_L:
+  sequence: MEEVTIKANLIFANGSTQTAEFKGTFEKATSEAYAYADTLKKDNGEWTVDVADKGYTLNIKFAG
+  length: 64
+  description: "Protein L from Peptostreptococcus magnus. Small IDP used as benchmark.HPS benchmark sequence (Dignon et al. 2018)."
+
+ACTR:
+  sequence: GTQNRPLLRNSLDDLVGPPSNLEGQSDERALLDQLHTLLSNTDATGLEEIDRALGIPELVNQGQALEPKQD
+  length: 71
+  description: "Activation domain of the steroid receptor coactivator (SRC-1/ACTR). Disordered in isolation, folds on binding to NCBD. Classic coupled folding-and-binding IDP. HPS benchmark sequence (Dignon et al. 2018)."
+
+hNHE1cdt:
+  sequence: MVPAHKLDSPTMSRARIGSDPLAYEPKEDLPVITIDPASPQSPESVDLVNEELKGKVLGLSRDPAKVAEEDEDDDGGIMMRSKETSSPGTDDVFTPAPSDSPSSQRIQRCLSDPGPHPEPGEGEPFFPKGQ
+  length: 131
+  description: "C-terminal disordered tail of human Na+/H+ exchanger 1 (NHE1). Involved in pH regulation signaling. Notoriously difficult to simulate accurately. HPS benchmark sequence (Dignon et al. 2018)."
+
+sNase:
+  sequence: ATSTKKLHKEPATLIKAIDGDTVKLMYKGQPMTFRLLLVDTPETKHPKKGVEKYGPEASAFTKKMVENAKKIEVEFDKGQRTDKYGRGLAYIYADGKMVNEALVRQGLAKVAYVYKPNNTHEQHLRKSEAQAKKEK
+  length: 136
+  description: "Staphylococcal nuclease (SNase). Well-studied model protein for pH effects and electrostatics in IDPs. Has extensive experimental pKa data. HPS benchmark (Dignon et al. 2018)."
+
+alpha_synuclein:
+  sequence: MDVFMKGLSKAKEGVVAAAEKTKQGVAEAAGKTKEGVLYVGSKTKEGVVHGVATVAEKTKEQVTNVGGAVVTGVTAVAQKTVEGAGSIAAATGFVKKDQLGKNEEGAPQEGILEDMPVDPDNEAYEMPSEEGYQDYEPEA
+  length: 140
+  description: "Alpha-synuclein. Presynaptic protein central to Parkinson's disease.Forms Lewy body aggregates. One of the most studied IDPs experimentally. HPS benchmark sequence (Dignon et al. 2018)."

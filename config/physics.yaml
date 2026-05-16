@@ -1,0 +1,37 @@
+baseline:
+  description: "Standard HPS conditions, room temperature"
+
+  # Thermodynamics
+  temperature_K: 298
+  ionic_concentration_M: 0.150        # salt concentration in mol/L
+
+  # Force field
+  hydropathy_scale: HPS1
+  epsilon_lj: 0.1                     # kCal/mol, LJ well depth
+  yukawa_r_cut: 3.5                   # nm, cutoff for electrostatics
+  lj_r_cut: 3.5                       # nm, cutoff for attractive LJ
+
+  # Bonded
+  harmonic_k: 1920                    # kCal/mol/nm^2
+  harmonic_r0: 0.38                   # nm, equilibrium bond length
+
+  # Box
+  box_size: 500                       # nm
+
+  # Integrator
+  dt: 0.01                            # timestep (dimensionless HPS units)
+
+  # Run length
+  # null = use Rouse estimate: int((rouse_multiplier * N^2.2) / dt) 
+  # integer = fixed override
+  rouse_multiplier: 5                 # used if production_steps is null
+  production_multiplier: 40            # used if production_steps is null
+  equilibration_steps:          # null = one full Rouse time
+  production_steps:               # null = one full Rouse time
+
+  # Output
+  frames: 3000                    # frames written every N/frames steps
+cold:
+  extends: baseline
+  description: "Very low temperature run for collapse behavior"
+  temperature_K: 5

@@ -1,0 +1,13 @@
+{
+  "task_id": 8,
+  "status": "completed",
+  "seed": 3646,
+  "KT": 0.592187,
+  "equilibration_steps": 5912053,
+  "production_steps": 47296429,
+  "total_steps": 53208482,
+  "trajectory_file": "runs/small_n_full_run_0412/trajectories/ACTR_traj_8.gsd",
+  "wall_time_s": 4015,
+  "n_frames": 3000,
+  "completed_at": "2026-04-13T06:55:30"
+}

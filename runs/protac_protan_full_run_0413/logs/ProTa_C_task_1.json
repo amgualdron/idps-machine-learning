@@ -1,0 +1,13 @@
+{
+  "task_id": 1,
+  "status": "completed",
+  "seed": 3388,
+  "KT": 0.592187,
+  "equilibration_steps": 21992133,
+  "production_steps": 175937069,
+  "total_steps": 197929202,
+  "trajectory_file": "runs/protac_protan_full_run_0413/trajectories/ProTa_C_traj_1.gsd",
+  "wall_time_s": 18293,
+  "n_frames": 3000,
+  "completed_at": "2026-04-13T13:22:19"
+}

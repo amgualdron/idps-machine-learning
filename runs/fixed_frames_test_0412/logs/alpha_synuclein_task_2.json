@@ -1,0 +1,13 @@
+{
+  "task_id": 2,
+  "status": "completed",
+  "seed": 7319,
+  "KT": 0.592187,
+  "equilibration_steps": 10532019,
+  "production_steps": 210640399,
+  "total_steps": 221172418,
+  "trajectory_file": "runs/fixed_frames_test_0412/trajectories/alpha_synuclein_traj_2.gsd",
+  "wall_time_s": 20386,
+  "n_frames": 3000,
+  "completed_at": "2026-04-12T15:05:06"
+}

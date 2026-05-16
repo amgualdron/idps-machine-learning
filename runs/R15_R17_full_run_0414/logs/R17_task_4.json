@@ -1,0 +1,13 @@
+{
+  "task_id": 4,
+  "status": "completed",
+  "seed": 5849,
+  "KT": 0.592187,
+  "equilibration_steps": 12559432,
+  "production_steps": 100475457,
+  "total_steps": 113034889,
+  "trajectory_file": "runs/R15_R17_full_run_0414/trajectories/R17_traj_4.gsd",
+  "wall_time_s": 11208,
+  "n_frames": 3000,
+  "completed_at": "2026-04-15T03:41:39"
+}

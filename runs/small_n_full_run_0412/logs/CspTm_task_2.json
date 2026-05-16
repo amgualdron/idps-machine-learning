@@ -1,0 +1,13 @@
+{
+  "task_id": 2,
+  "status": "completed",
+  "seed": 7707,
+  "KT": 0.592187,
+  "equilibration_steps": 5203967,
+  "production_steps": 41631739,
+  "total_steps": 46835706,
+  "trajectory_file": "runs/small_n_full_run_0412/trajectories/CspTm_traj_2.gsd",
+  "wall_time_s": 3839,
+  "n_frames": 3000,
+  "completed_at": "2026-04-13T01:11:15"
+}

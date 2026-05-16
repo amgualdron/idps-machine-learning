@@ -1,0 +1,13 @@
+{
+  "task_id": 6,
+  "status": "completed",
+  "seed": 4355,
+  "KT": 0.592187,
+  "equilibration_steps": 4705068,
+  "production_steps": 37640547,
+  "total_steps": 42345615,
+  "trajectory_file": "runs/small_n_full_run_0412/trajectories/Protein_L_traj_6.gsd",
+  "wall_time_s": 3227,
+  "n_frames": 3000,
+  "completed_at": "2026-04-13T04:41:22"
+}
