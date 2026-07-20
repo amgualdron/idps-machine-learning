@@ -1,13 +1,21 @@
+"""
+predict_idp.py — forward pass + plot for ONE IDP sequence.
+
+Updated to align with the single-head distogram network architecture.
+"""
 from __future__ import annotations
-import argparse
 from functools import partial
 from typing import List
 
+import argparse
 import numpy as np
-import jax
-import jax.numpy as jnp
+import jax, jax.numpy as jnp
 from jax.scipy.linalg import toeplitz
 import equinox as eqx
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+
 import optax
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -138,7 +146,7 @@ def _shd_np(lam):
     return float(np.tril((lam[:, None] + lam[None, :]) / safe, -1).sum() / k)
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 2.  Model
+# 2.  Model Architecture Block
 # ══════════════════════════════════════════════════════════════════════════════
 def align_valid_to_full(phys_bnf, kernel_size, L):
     pad_total = L - phys_bnf.shape[1]
@@ -245,7 +253,7 @@ class RgDistogramNet(eqx.Module):
         return logits
 
 # ══════════════════════════════════════════════════════════════════════════════
-# 3.  Loss  (CE + mean/std + optional skew/kurt vs RAW moments)
+# 3.  Moment Calculation
 # ══════════════════════════════════════════════════════════════════════════════
 def _pred_moments(p, grid):
     m1 = p @ grid
@@ -256,239 +264,122 @@ def _pred_moments(p, grid):
     kurt = jnp.sum(p * d ** 4, axis=-1) / (sd ** 4 + 1e-8)
     return m1, sd, skew, kurt
 
-# def loss_fn(model, ids, raw, phys, glob, mask,
-#             target_dist, grid,
-#             target_mean, target_std, target_skew, target_kurt,
-#             lam_mom=10.0, lam_skew=0.0, lam_kurt=0.0):
-#     logits = jax.vmap(model)(ids, raw, phys, glob, mask)
-#     logp = jax.nn.log_softmax(logits, axis=-1)
-#     ce = -jnp.sum(target_dist * logp, axis=-1)
-#     loss = jnp.mean(ce)
-    
-#     p = jax.nn.softmax(logits, axis=-1)
-#     pm, psd, psk, pku = _pred_moments(p, grid)
-#     loss += lam_mom  * jnp.mean(((pm  - target_mean) / (target_mean + 1e-6)) ** 2)
-#     loss += lam_mom  * jnp.mean(((psd - target_std)  / (target_std  + 1e-6)) ** 2)
-#     loss += lam_skew * jnp.mean((psk - target_skew) ** 2)
-#     loss += lam_kurt * jnp.mean((pku - target_kurt) ** 2)
-#     return loss
-
-def loss_fn(model, ids, raw, phys, glob, mask,
-            target_dist, grid,
-            target_mean, target_std, target_skew, target_kurt,
-            lam_mom=2.0, 
-            lam_skew=0.1,  # ◄── Start small (e.g., 0.1)
-            lam_kurt=0.1): # ◄── Start small (e.g., 0.1)
-    
-    logits = jax.vmap(model)(ids, raw, phys, glob, mask)
-    logits = jnp.clip(logits, -20.0, 20.0)  # Keeps softmax flexible
-    
-    logp = jax.nn.log_softmax(logits, axis=-1)
-    ce = -jnp.sum(target_dist * logp, axis=-1)
-    loss = jnp.mean(ce)
-    
-    p = jax.nn.softmax(logits, axis=-1)
-    pm, psd, psk, pku = _pred_moments(p, grid)
-    
-    # Base distribution constraints (Stable L1)
-    loss += lam_mom * jnp.mean(jnp.abs(pm - target_mean))
-    loss += lam_mom * jnp.mean(jnp.abs(psd - target_std))
-    
-    # Higher-order shape constraints (Stable L1)
-    loss += lam_skew * jnp.mean(jnp.abs(psk - target_skew))
-    loss += lam_kurt * jnp.mean(jnp.abs(pku - target_kurt))
-    
-    return loss
-
-@eqx.filter_jit
-def train_step(model, opt_state, optimizer, batch):
-    loss, grads = eqx.filter_value_and_grad(loss_fn)(model, *batch)
-    updates, opt_state = optimizer.update(grads, opt_state, model)
-    model = eqx.apply_updates(model, updates)
-    return model, opt_state, loss
-
-@eqx.filter_jit
-def eval_moments(model, ids, raw, phys, glob, mask, grid):
-    logits = jax.vmap(model)(ids, raw, phys, glob, mask)
-    p = jax.nn.softmax(logits, axis=-1)
-    return _pred_moments(p, grid)
-
 # ══════════════════════════════════════════════════════════════════════════════
-# 4.  Data prep
+# 4.  Inference Pipelines
 # ══════════════════════════════════════════════════════════════════════════════
 KDE_MAX = 150.0
 N_BINS  = 450
 GRID    = jnp.linspace(0.0, KDE_MAX, N_BINS)
+STANDARD_AA = set("ARNDCQEGHILKMFPSTWYV")
+KERNELS = (3, 5, 9, 15, 21, 33)
 
-def clean_dataframe(df, frame_threshold=10_000, max_len=400, min_len=20):
-    df = df[df["total_frames"] >= frame_threshold].copy()
-    logN, logRg = np.log(df["seq_length"]), np.log(df["calculated_rg_mean"])
-    nu, log_a = np.polyfit(logN, logRg, 1)
-    resid = logRg - (log_a + nu * logN)
-    df = df[np.abs(resid) <= 3 * resid.std()]
-    df = df[(df["seq_length"] <= max_len) & (df["seq_length"] >= min_len)]
-    print(f"[clean] {len(df)} rows kept | Flory nu={nu:.3f}")
-    return df.reset_index(drop=True)
+def load_model(path):
+    skeleton = RgDistogramNet(key=jax.random.PRNGKey(0),
+                              kernel_sizes=KERNELS, n_bins=N_BINS, n_globals=2)
+    return eqx.tree_deserialise_leaves(path, skeleton)
 
-def tokenize(seq, L):
-    tid = [AA_TO_ID.get(a, 0) for a in seq.upper()]
-    m = [1.0] * len(tid)
-    pad = L - len(tid)
-    return np.array(tid + [0] * pad, np.int32), np.array(m + [0.0] * pad, np.float32)
+def read_sequence(args):
+    if args.fasta:
+        seq, started = [], False
+        for line in open(args.fasta):
+            if line.startswith(">"):
+                if started:
+                    break
+                started = True
+                continue
+            seq.append(line.strip())
+        raw = "".join(seq)
+    else:
+        raw = args.seq
+    return "".join(raw.split()).upper()
 
-def prepare_arrays(df, kernel_sizes=(3, 5, 9, 15), phys_chunk=256):
-    N = len(df)
-    L = int(df["sequence"].str.len().max())
-    print(f"[prep] N={N}  L(max)={L}")
+def featurize(seq, stats):
+    L = len(seq)
+    if L < max(KERNELS):
+        raise SystemExit(f"sequence length {L} < largest kernel {max(KERNELS)}")
+    bad = sorted(set(seq) - STANDARD_AA)
+    if bad:
+        print(f"[warn] non-standard residues mapped to padding id 0: {bad}")
 
-    ids  = np.zeros((N, L), np.int32)
-    mask = np.zeros((N, L), np.float32)
-    glob = np.zeros((N, 2), np.float32)
-    pm_np = np.asarray(param_matrix)
-    for i, seq in enumerate(df["sequence"]):
-        ids[i], mask[i] = tokenize(seq, L)
-        ell = int(mask[i].sum())
-        q   = pm_np[ids[i, :ell], CHARGE]
-        lam = pm_np[ids[i, :ell], HPS1]
-        glob[i] = (_scd_np(q), _shd_np(lam))
+    pm   = np.asarray(param_matrix)
+    ids  = np.array([[AA_TO_ID.get(a, 0) for a in seq]], np.int32)
+    mask = np.ones((1, L), np.float32)
+    raw  = pm[ids]
+    q, lam = pm[ids[0], CHARGE], pm[ids[0], HPS1]
+    glob = np.array([[_scd_np(q), _shd_np(lam)]], np.float32)
+    phys = np.asarray(build_physics_stack(jnp.array(ids), jnp.array(raw),
+                                          jnp.array(mask), KERNELS, L))
 
-    raw = pm_np[ids]
+    raw  = ((raw  - stats["r_mu"]) / stats["r_sd"]) * mask[..., None]
+    phys = ((phys - stats["p_mu"][None, :, :, None])
+                  / stats["p_sd"][None, :, :, None]) * mask[:, None, None, :]
+    glob = (glob - stats["g_mu"]) / stats["g_sd"]
 
-    S = len(kernel_sizes)
-    phys = np.zeros((N, S, N_PHYS, L), np.float32)
-    for a in range(0, N, phys_chunk):
-        b = min(a + phys_chunk, N)
-        ps = build_physics_stack(jnp.array(ids[a:b]), jnp.array(raw[a:b]),
-                                 jnp.array(mask[a:b]), kernel_sizes, L)
-        phys[a:b] = np.asarray(ps)
+    return (jnp.array(ids), jnp.array(raw, jnp.float32),
+            jnp.array(phys, jnp.float32), jnp.array(glob, jnp.float32),
+            jnp.array(mask))
 
-    dist = np.stack(df["rg_distogram"].values).astype(np.float32)
-    assert dist.shape[1] == N_BINS, f"distogram has {dist.shape[1]} bins, expected {N_BINS}"
-    print(f"[prep] raw distogram row-sum mean = {dist.sum(1).mean():.3f} (KDE density; normalising to 1)")
-    dist /= dist.sum(1, keepdims=True)
+def predict(model, feats):
+    logits = jax.vmap(model)(*feats)
+    p = jax.nn.softmax(logits, axis=-1)[0]
+    m, sd, sk, ku = (float(x[0]) for x in _pred_moments(p[None], GRID))
+    return np.asarray(p), dict(
+        mean=m, std=sd, skew=sk,
+        kurtosis_raw=ku,
+        excess_kurtosis=ku - 3.0,
+    )
 
-    t_mean  = df["calculated_rg_mean"].values.astype(np.float32)
-    t_std   = df["calculated_rg_std"].values.astype(np.float32)
-    t_skew  = df["calculated_rg_skew"].values.astype(np.float32)
-    t_kurt  = df["calculated_rg_kurtosis"].values.astype(np.float32)
+def plot(p, info, name, out):
+    grid = np.asarray(GRID)
+    cdf = np.cumsum(p)
+    lo = grid[max(0, np.searchsorted(cdf, 0.001) - 1)]
+    hi = grid[min(len(grid) - 1, np.searchsorted(cdf, 0.999) + 1)]
+    pad = 0.15 * (hi - lo + 1e-6)
 
-    return dict(ids=ids, raw=raw, phys=phys, glob=glob, mask=mask,
-                dist=dist, mean=t_mean, std=t_std, skew=t_skew, kurt=t_kurt, L=L)
+    gauss = np.exp(-0.5 * ((grid - info["mean"]) / info["std"]) ** 2)
+    gauss *= p.max() / gauss.max()
 
-def standardize(data, tr_idx):
-    m = data["mask"][tr_idx].astype(bool)
-    r = data["raw"][tr_idx]
-    r_mu = r[m].mean(0);  r_sd = r[m].std(0) + 1e-6
-    data["raw"] = ((data["raw"] - r_mu) / r_sd) * data["mask"][..., None]
-    
-    p = data["phys"][tr_idx]
-    mp = m[:, None, None, :]
-    p_mu = (p * mp).sum((0, 3)) / mp.sum((0, 3))
-    p_var = (((p - p_mu[None, :, :, None]) ** 2) * mp).sum((0, 3)) / mp.sum((0, 3))
-    p_sd = np.sqrt(p_var) + 1e-6
-    data["phys"] = ((data["phys"] - p_mu[None, :, :, None]) / p_sd[None, :, :, None])
-    data["phys"] *= data["mask"][:, None, None, :]
-    
-    g = data["glob"][tr_idx]
-    g_mu = g.mean(0); g_sd = g.std(0) + 1e-6
-    data["glob"] = (data["glob"] - g_mu) / g_sd
-    data["_stats"] = dict(r_mu=r_mu, r_sd=r_sd, p_mu=p_mu, p_sd=p_sd, g_mu=g_mu, g_sd=g_sd)
-    return data
+    fig, ax = plt.subplots(figsize=(7.2, 4.3))
+    ax.fill_between(grid, p, alpha=0.30, color="#4C72B0")
+    ax.plot(grid, p, color="#4C72B0", lw=1.9, label="predicted P(Rg)")
+    ax.plot(grid, gauss, "--", color="#999", lw=1.3, label="Gaussian (same μ, σ)")
+    ax.axvline(info["mean"], color="#C44E52", lw=1.1, ls=":")
+    ax.set_xlim(max(0.0, lo - pad), hi + pad)
+    ax.set_ylim(bottom=0)
+    ax.set_xlabel("Rg  (same length units as the training grid)")
+    ax.set_ylabel("probability mass per bin")
+    ax.set_title(f"Predicted Rg distribution — {name}")
+    txt = (f"μ        = {info['mean']:.2f}\n"
+           f"σ        = {info['std']:.2f}\n"
+           f"skew     = {info['skew']:.3f}\n"
+           f"kurt(raw)= {info['kurtosis_raw']:.3f}")
+    ax.text(0.98, 0.95, txt, transform=ax.transAxes, ha="right", va="top",
+            fontsize=9, family="monospace",
+            bbox=dict(boxstyle="round", fc="white", ec="#ccc"))
+    ax.legend(loc="upper left", fontsize=8, frameon=False)
+    fig.tight_layout()
+    fig.savefig(out, dpi=150)
+    print(f"[plot] saved -> {out}")
 
-# ══════════════════════════════════════════════════════════════════════════════
-# 5.  Training loop
-# ══════════════════════════════════════════════════════════════════════════════
-def make_batch(d, idx):
-    j = jnp.array
-    return (j(d["ids"][idx]),  j(d["raw"][idx]),  j(d["phys"][idx]),
-            j(d["glob"][idx]), j(d["mask"][idx]), j(d["dist"][idx]),
-            GRID, j(d["mean"][idx]), j(d["std"][idx]),
-            j(d["skew"][idx]), j(d["kurt"][idx]))
-
-def run_training(d, *, epochs=30, batch_size=64, lr=5e-4, val_frac=0.15, seed=42):
-    N = len(d["ids"])
-    rng = np.random.default_rng(seed)
-    perm = rng.permutation(N)
-    n_val = int(N * val_frac)
-    val_idx, tr_idx = perm[:n_val], perm[n_val:]
-    d = standardize(d, tr_idx)
-
-    model = RgDistogramNet(key=jax.random.PRNGKey(seed),
-                           kernel_sizes=(3, 5, 9, 15, 21, 33), n_bins=N_BINS, n_globals=2)
-    opt = optax.adamw(lr, weight_decay=1e-4)
-    opt_state = opt.init(eqx.filter(model, eqx.is_array))
-
-    steps = len(tr_idx) // batch_size
-    for ep in range(epochs):
-        rng.shuffle(tr_idx)
-        ep_loss = 0.0
-        for s in range(steps):
-            bidx = tr_idx[s * batch_size:(s + 1) * batch_size]
-            model, opt_state, l = train_step(model, opt_state, opt, make_batch(d, bidx))
-            ep_loss += float(l)
-            
-        pm, psd, psk, pku = eval_moments(
-            model, jnp.array(d["ids"][val_idx]), jnp.array(d["raw"][val_idx]),
-            jnp.array(d["phys"][val_idx]), jnp.array(d["glob"][val_idx]),
-            jnp.array(d["mask"][val_idx]), GRID)
-        
-        mae = lambda a, b: float(np.mean(np.abs(np.asarray(a) - b)))
-        print(f"ep {ep+1:02d}/{epochs} | loss {ep_loss/steps:7.4f} | "
-              f"val MAE  mean {mae(pm, d['mean'][val_idx]):.3f}  "
-              f"std {mae(psd, d['std'][val_idx]):.3f}  "
-              f"skew {mae(psk, d['skew'][val_idx]):.3f}  "
-              f"kurt {mae(pku, d['kurt'][val_idx]):.3f}")
-
-    eqx.tree_serialise_leaves("rg_distogram_model.eqx", model)
-    np.savez("rg_standardisation_stats.npz", **d["_stats"])
-    print("saved: rg_distogram_model.eqx + rg_standardisation_stats.npz")
-    return model
-
-# ══════════════════════════════════════════════════════════════════════════════
-# 6.  Smoke test
-# ══════════════════════════════════════════════════════════════════════════════
-def synthetic_df(N=40, seed=0):
-    import pandas as pd
-    rng = np.random.default_rng(seed)
-    aas = list("ARNDCQEGHILKMFPSTWYV")
-    rows = []
-    for _ in range(N):
-        ell = int(rng.integers(25, 120))
-        seq = "".join(rng.choice(aas, ell))
-        mu = rng.uniform(15, 60); sd = rng.uniform(2, 8)
-        g = np.exp(-0.5 * ((np.asarray(GRID) - mu) / sd) ** 2)
-        g = g / (g.sum() * (KDE_MAX / (N_BINS - 1)))
-        rows.append(dict(sequence=seq, seq_length=ell, total_frames=50_000,
-                         calculated_rg_mean=mu, calculated_rg_std=sd,
-                         calculated_rg_skew=rng.uniform(-0.5, 1.0),
-                         calculated_rg_kurtosis=rng.uniform(2.5, 4.0),
-                         rg_distogram=g.tolist()))
-    return pd.DataFrame(rows)
-
-def smoke():
-    print("── SMOKE TEST ──")
-    df = clean_dataframe(synthetic_df(), min_len=10)
-    d = prepare_arrays(df, phys_chunk=16)
-    for k in ("ids", "raw", "phys", "glob", "mask", "dist"):
-        print(f"   {k:5s} {np.asarray(d[k]).shape}")
-    run_training(d, epochs=3, batch_size=8, val_frac=0.25)
-    print("── SMOKE OK ──")
-
-# ══════════════════════════════════════════════════════════════════════════════
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--parquet", default="idp_ml_dataset.parquet")
-    ap.add_argument("--smoke", action="store_true")
-    ap.add_argument("--epochs", type=int, default=30)
-    ap.add_argument("--batch_size", type=int, default=64)
+    ap.add_argument("--seq")
+    ap.add_argument("--fasta")
+    ap.add_argument("--weights", default="rg_distogram_model.eqx")
+    ap.add_argument("--stats",   default="rg_standardisation_stats.npz")
+    ap.add_argument("--name",    default="my IDP")
+    ap.add_argument("--out",     default="rg_prediction.png")
     a = ap.parse_args()
-    if a.smoke:
-        smoke(); return
-    import pandas as pd
-    df = clean_dataframe(pd.read_parquet(a.parquet))
-    KERNELS = (3, 5, 9, 15, 21, 33)
-    d = prepare_arrays(df, kernel_sizes=KERNELS)
-    run_training(d, epochs=a.epochs, batch_size=a.batch_size)
+
+    seq = read_sequence(a) if (a.fasta or a.seq) else 'GPGMRGKVKWFDSKKGYGFITKDEGGDVFVHWSAIEMEGFKTLKEGQVVEFEIQEGKKGGQAAHVKV'
+    stats = dict(np.load(a.stats))
+    model = load_model(a.weights)
+    p, info = predict(model, featurize(seq, stats))
+
+    print(f"[{a.name}]  L = {len(seq)}   sum(P) = {p.sum():.4f}")
+    for k in ("mean", "std", "skew", "kurtosis_raw", "excess_kurtosis"):
+        print(f"    {k:16s} {info[k]:+.4f}")
+    plot(p, info, a.name, a.out)
 
 if __name__ == "__main__":
     main()
