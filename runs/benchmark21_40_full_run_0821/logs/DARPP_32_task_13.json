@@ -1,0 +1,13 @@
+{
+  "task_id": 13,
+  "status": "completed",
+  "seed": 9662,
+  "KT": 0.592187,
+  "equilibration_steps": 18076336,
+  "production_steps": 72305346,
+  "total_steps": 90381682,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/DARPP_32_traj_13.gsd",
+  "wall_time_s": 8861,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T00:20:24"
+}

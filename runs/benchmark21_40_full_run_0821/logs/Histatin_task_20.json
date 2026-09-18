@@ -1,0 +1,13 @@
+{
+  "task_id": 20,
+  "status": "completed",
+  "seed": 6938,
+  "KT": 0.592187,
+  "equilibration_steps": 543794,
+  "production_steps": 2175177,
+  "total_steps": 2718971,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/Histatin_traj_20.gsd",
+  "wall_time_s": 157,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T15:44:33"
+}

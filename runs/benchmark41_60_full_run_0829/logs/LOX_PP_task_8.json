@@ -1,0 +1,13 @@
+{
+  "task_id": 8,
+  "status": "completed",
+  "seed": 5853,
+  "KT": 0.592187,
+  "equilibration_steps": 29313531,
+  "production_steps": 117254125,
+  "total_steps": 146567656,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/LOX_PP_traj_8.gsd",
+  "wall_time_s": 13281,
+  "n_frames": 3000,
+  "completed_at": "2026-08-31T03:39:30"
+}

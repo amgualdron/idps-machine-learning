@@ -1,0 +1,13 @@
+{
+  "task_id": 16,
+  "status": "completed",
+  "seed": 1148,
+  "KT": 0.592187,
+  "equilibration_steps": 27164665,
+  "production_steps": 108658662,
+  "total_steps": 135823327,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/Fhua_traj_16.gsd",
+  "wall_time_s": 13726,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T12:43:49"
+}

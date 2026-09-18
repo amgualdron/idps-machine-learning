@@ -1,0 +1,13 @@
+{
+  "task_id": 14,
+  "status": "completed",
+  "seed": 4350,
+  "KT": 0.592187,
+  "equilibration_steps": 49776177,
+  "production_steps": 199104708,
+  "total_steps": 248880885,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/ERalpha_NTD_traj_14.gsd",
+  "wall_time_s": 24754,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T07:12:58"
+}

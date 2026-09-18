@@ -1,0 +1,13 @@
+{
+  "task_id": 8,
+  "status": "completed",
+  "seed": 7463,
+  "KT": 0.592187,
+  "equilibration_steps": 8335694,
+  "production_steps": 33342779,
+  "total_steps": 41678473,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/Ash1_traj_8.gsd",
+  "wall_time_s": 3449,
+  "n_frames": 3000,
+  "completed_at": "2026-08-21T23:52:29"
+}

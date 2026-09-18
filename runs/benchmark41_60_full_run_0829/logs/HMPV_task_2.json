@@ -1,0 +1,13 @@
+{
+  "task_id": 2,
+  "status": "completed",
+  "seed": 1907,
+  "KT": 0.592187,
+  "equilibration_steps": 4233461,
+  "production_steps": 16933847,
+  "total_steps": 21167308,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/HMPV_traj_2.gsd",
+  "wall_time_s": 1675,
+  "n_frames": 3000,
+  "completed_at": "2026-08-29T11:22:28"
+}

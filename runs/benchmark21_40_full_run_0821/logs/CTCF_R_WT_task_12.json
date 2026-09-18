@@ -1,0 +1,13 @@
+{
+  "task_id": 12,
+  "status": "completed",
+  "seed": 8507,
+  "KT": 0.592187,
+  "equilibration_steps": 48612483,
+  "production_steps": 194449933,
+  "total_steps": 243062416,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/CTCF_R_WT_traj_12.gsd",
+  "wall_time_s": 27603,
+  "n_frames": 3000,
+  "completed_at": "2026-08-23T21:52:43"
+}

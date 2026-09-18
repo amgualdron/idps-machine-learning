@@ -1,0 +1,13 @@
+{
+  "task_id": 1,
+  "status": "completed",
+  "seed": 9294,
+  "KT": 0.592187,
+  "equilibration_steps": 12837398,
+  "production_steps": 51349594,
+  "total_steps": 64186992,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/HIV_TAT_traj_1.gsd",
+  "wall_time_s": 6161,
+  "n_frames": 3000,
+  "completed_at": "2026-08-29T10:54:32"
+}

@@ -1,0 +1,13 @@
+{
+  "task_id": 12,
+  "status": "completed",
+  "seed": 1813,
+  "KT": 0.592187,
+  "equilibration_steps": 18076336,
+  "production_steps": 72305346,
+  "total_steps": 90381682,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/Neuroligin_3_traj_12.gsd",
+  "wall_time_s": 9350,
+  "n_frames": 3000,
+  "completed_at": "2026-09-01T16:26:24"
+}

@@ -1,0 +1,13 @@
+{
+  "task_id": 10,
+  "status": "completed",
+  "seed": 9031,
+  "KT": 0.592187,
+  "equilibration_steps": 166789622,
+  "production_steps": 667158491,
+  "total_steps": 833948113,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/CortactinCR_traj_10.gsd",
+  "wall_time_s": 116900,
+  "n_frames": 3000,
+  "completed_at": "2026-08-23T10:12:50"
+}

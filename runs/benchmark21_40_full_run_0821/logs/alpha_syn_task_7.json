@@ -1,0 +1,13 @@
+{
+  "task_id": 7,
+  "status": "completed",
+  "seed": 7476,
+  "KT": 0.592187,
+  "equilibration_steps": 26330049,
+  "production_steps": 105320199,
+  "total_steps": 131650248,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/alpha_syn_traj_7.gsd",
+  "wall_time_s": 12886,
+  "n_frames": 3000,
+  "completed_at": "2026-08-21T22:54:59"
+}

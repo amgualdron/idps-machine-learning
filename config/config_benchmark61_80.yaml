@@ -1,0 +1,23 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Master control panel for a single experiment batch.
+# ─────────────────────────────────────────────────────────────────────────────
+run_name: benchmark61_80_full_run
+description: "Proteins 61-80 from benchmark_data.csv (mixed lengths 75-334 aa), HPS1 room temp, 1 replicate, reduced production steps (multiplier 40->20)"
+# ── Sequence selection ────────────────────────────────────────────────────────
+sequences:
+  source: benchmark_sequences_61_80.yaml
+
+  # Option 1 — explicit list
+  # select: [A, B]
+  # Option 2 — full database
+  select: all
+
+# ── Parameter sets ────────────────────────────────────────────────────────────
+# Single value    → one run per sequence
+# List of values  → cartesian product (sequence x param_set)
+num_replicates: 1
+param_sets: [baseline_reduced_production]
+# ── Execution ─────────────────────────────────────────────────────────────────
+runner: local                 # local | slurm
+workers: 1                    # local only — parallel processes
+dry_run: false                # true = print jobs without submitting

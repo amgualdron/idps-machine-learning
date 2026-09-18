@@ -1,0 +1,13 @@
+{
+  "task_id": 4,
+  "status": "completed",
+  "seed": 3837,
+  "KT": 0.592187,
+  "equilibration_steps": 29754028,
+  "production_steps": 119016114,
+  "total_steps": 148770142,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/HrpO_traj_4.gsd",
+  "wall_time_s": 15183,
+  "n_frames": 3000,
+  "completed_at": "2026-08-29T18:32:59"
+}

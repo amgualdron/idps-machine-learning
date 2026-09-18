@@ -1,0 +1,13 @@
+{
+  "task_id": 15,
+  "status": "completed",
+  "seed": 3124,
+  "KT": 0.592187,
+  "equilibration_steps": 13403304,
+  "production_steps": 53613219,
+  "total_steps": 67016523,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/Fez1_traj_15.gsd",
+  "wall_time_s": 6124,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T08:55:03"
+}

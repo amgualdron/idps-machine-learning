@@ -1,0 +1,13 @@
+{
+  "task_id": 8,
+  "status": "completed",
+  "seed": 7923,
+  "KT": 0.592187,
+  "equilibration_steps": 25104712,
+  "production_steps": 100418849,
+  "total_steps": 125523561,
+  "trajectory_file": "runs/benchmark20_full_run_0818/trajectories/A1_LCD_6R_plus_6K_traj_8.gsd",
+  "wall_time_s": 11140,
+  "n_frames": 3000,
+  "completed_at": "2026-08-19T08:13:59"
+}

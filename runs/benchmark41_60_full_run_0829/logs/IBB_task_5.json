@@ -1,0 +1,13 @@
+{
+  "task_id": 5,
+  "status": "completed",
+  "seed": 5974,
+  "KT": 0.592187,
+  "equilibration_steps": 12284781,
+  "production_steps": 49139125,
+  "total_steps": 61423906,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/IBB_traj_5.gsd",
+  "wall_time_s": 5575,
+  "n_frames": 3000,
+  "completed_at": "2026-08-29T20:05:54"
+}

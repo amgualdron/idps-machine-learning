@@ -1,0 +1,13 @@
+{
+  "task_id": 17,
+  "status": "completed",
+  "seed": 5994,
+  "KT": 0.592187,
+  "equilibration_steps": 12013439,
+  "production_steps": 48053758,
+  "total_steps": 60067197,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/GRB14_PIR_traj_17.gsd",
+  "wall_time_s": 5593,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T14:17:03"
+}

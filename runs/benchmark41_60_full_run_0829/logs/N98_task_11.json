@@ -1,0 +1,13 @@
+{
+  "task_id": 11,
+  "status": "completed",
+  "seed": 6734,
+  "KT": 0.592187,
+  "equilibration_steps": 32010403,
+  "production_steps": 128041615,
+  "total_steps": 160052018,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/N98_traj_11.gsd",
+  "wall_time_s": 13546,
+  "n_frames": 3000,
+  "completed_at": "2026-09-01T13:50:33"
+}

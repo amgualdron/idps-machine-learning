@@ -1,0 +1,13 @@
+{
+  "task_id": 10,
+  "status": "completed",
+  "seed": 6415,
+  "KT": 0.592187,
+  "equilibration_steps": 144974589,
+  "production_steps": 579898358,
+  "total_steps": 724872947,
+  "trajectory_file": "runs/benchmark41_60_full_run_0829/trajectories/Msh6_traj_10.gsd",
+  "wall_time_s": 107553,
+  "n_frames": 3000,
+  "completed_at": "2026-09-01T10:04:46"
+}

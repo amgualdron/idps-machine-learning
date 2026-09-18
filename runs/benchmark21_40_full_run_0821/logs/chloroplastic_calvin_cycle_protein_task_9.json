@@ -1,0 +1,13 @@
+{
+  "task_id": 9,
+  "status": "completed",
+  "seed": 5491,
+  "KT": 0.592187,
+  "equilibration_steps": 12559432,
+  "production_steps": 50237728,
+  "total_steps": 62797160,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/chloroplastic_calvin_cycle_protein_traj_9.gsd",
+  "wall_time_s": 6720,
+  "n_frames": 3000,
+  "completed_at": "2026-08-22T01:44:29"
+}

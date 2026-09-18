@@ -1,0 +1,24 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Master control panel for a single experiment batch.
+# ─────────────────────────────────────────────────────────────────────────────
+run_name: benchmark20_full_run
+description: "First 20 A1-LCD variants from benchmark_data.csv, HPS1 room temp, 1 replicate, production steps halved (multiplier 40->20) to fit a multi-day GPU budget"
+# ── Sequence selection ────────────────────────────────────────────────────────
+sequences:
+  source: benchmark_sequences.yaml
+
+  # Option 1 — explicit list
+  # select: [A, B]
+  # Option 2 — full database
+  select: all
+
+# ── Parameter sets ────────────────────────────────────────────────────────────
+# Single value    → one run per sequence
+# List of values  → cartesian product (sequence x param_set)
+num_replicates: 1
+param_sets: [baseline_reduced_production]   # Example: ["baseline", "cold"] for 2 replicates per sequence
+# param_sets: [baseline, cold]   # full sweep
+# ── Execution ─────────────────────────────────────────────────────────────────
+runner: local                 # local | slurm
+workers: 1                    # local only — parallel processes
+dry_run: false                # true = print jobs without submitting

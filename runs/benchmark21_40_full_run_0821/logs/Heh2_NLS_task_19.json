@@ -1,0 +1,13 @@
+{
+  "task_id": 19,
+  "status": "completed",
+  "seed": 4870,
+  "KT": 0.592187,
+  "equilibration_steps": 2275292,
+  "production_steps": 9101169,
+  "total_steps": 11376461,
+  "trajectory_file": "runs/benchmark21_40_full_run_0821/trajectories/Heh2_NLS_traj_19.gsd",
+  "wall_time_s": 805,
+  "n_frames": 3000,
+  "completed_at": "2026-08-24T15:41:55"
+}
