@@ -1,4 +1,13 @@
 {
   "task_id": 10,
-  "status": "pending"
+  "status": "completed",
+  "seed": 5373,
+  "KT": 0.592187,
+  "equilibration_steps": 15800853,
+  "production_steps": 63203415,
+  "total_steps": 79004268,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/ProTa_traj_10.gsd",
+  "wall_time_s": 6441,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T11:48:55"
 }

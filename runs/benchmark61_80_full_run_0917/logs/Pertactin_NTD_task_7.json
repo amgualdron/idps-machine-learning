@@ -1,10 +1,13 @@
 {
   "task_id": 7,
-  "status": "running",
+  "status": "completed",
   "seed": 5829,
   "KT": 0.592187,
   "equilibration_steps": 178324999,
   "production_steps": 713299997,
   "total_steps": 891624996,
-  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/Pertactin_NTD_traj_7.gsd"
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/Pertactin_NTD_traj_7.gsd",
+  "wall_time_s": 124423,
+  "n_frames": 3000,
+  "completed_at": "2026-09-19T18:51:04"
 }

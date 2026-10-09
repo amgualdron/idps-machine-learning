@@ -1,4 +1,13 @@
 {
   "task_id": 18,
-  "status": "pending"
+  "status": "completed",
+  "seed": 9296,
+  "KT": 0.592187,
+  "equilibration_steps": 178324999,
+  "production_steps": 713299997,
+  "total_steps": 891624996,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/Swap1_traj_18.gsd",
+  "wall_time_s": 121674,
+  "n_frames": 3000,
+  "completed_at": "2026-09-24T07:27:14"
 }

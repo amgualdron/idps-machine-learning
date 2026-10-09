@@ -1,0 +1,10 @@
+{
+  "task_id": 7,
+  "status": "running",
+  "seed": 8310,
+  "KT": 0.592187,
+  "equilibration_steps": 328650956,
+  "production_steps": 1314603827,
+  "total_steps": 1643254783,
+  "trajectory_file": "runs/benchmark81_100_full_run_0927/trajectories/Tau_ht40_traj_7.gsd"
+}

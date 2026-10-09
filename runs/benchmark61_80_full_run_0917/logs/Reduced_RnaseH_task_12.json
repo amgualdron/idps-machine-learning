@@ -1,4 +1,13 @@
 {
   "task_id": 12,
-  "status": "pending"
+  "status": "completed",
+  "seed": 3436,
+  "KT": 0.592187,
+  "equilibration_steps": 20160333,
+  "production_steps": 80641333,
+  "total_steps": 100801666,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/Reduced_RnaseH_traj_12.gsd",
+  "wall_time_s": 9695,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T15:20:35"
 }

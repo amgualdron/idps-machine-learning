@@ -1,4 +1,13 @@
 {
   "task_id": 9,
-  "status": "pending"
+  "status": "completed",
+  "seed": 9538,
+  "KT": 0.592187,
+  "equilibration_steps": 33407511,
+  "production_steps": 133630044,
+  "total_steps": 167037555,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/PPI2_traj_9.gsd",
+  "wall_time_s": 19106,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T10:01:34"
 }

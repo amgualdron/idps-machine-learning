@@ -1,4 +1,13 @@
 {
   "task_id": 8,
-  "status": "pending"
+  "status": "completed",
+  "seed": 6361,
+  "KT": 0.592187,
+  "equilibration_steps": 178324999,
+  "production_steps": 713299997,
+  "total_steps": 891624996,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/PNt_traj_8.gsd",
+  "wall_time_s": 121923,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T04:43:07"
 }

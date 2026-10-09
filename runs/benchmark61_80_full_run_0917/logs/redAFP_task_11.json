@@ -1,4 +1,13 @@
 {
   "task_id": 11,
-  "status": "pending"
+  "status": "completed",
+  "seed": 7277,
+  "KT": 0.592187,
+  "equilibration_steps": 7900181,
+  "production_steps": 31600724,
+  "total_steps": 39500905,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/redAFP_traj_11.gsd",
+  "wall_time_s": 3003,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T12:38:59"
 }

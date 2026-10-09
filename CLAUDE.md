@@ -16,8 +16,24 @@ Python code runs in the conda env `md-env` (`/home/andres/miniforge3/envs/md-env
 `scikit-learn`, `pyyaml`. There is no `environment.yml`/`requirements.txt` checked in yet — use
 `conda activate md-env` before running anything, or invoke the env's Python directly.
 
-`src/simulation.py` requires a GPU (`hoomd.device.GPU()` is hardcoded) — it cannot run on a
-CPU-only machine.
+`src/simulation.py` defaults to GPU (`--device gpu`, matching the author's workstation) but also
+accepts `--device cpu` (reads `SLURM_CPUS_PER_TASK` for HOOMD's TBB thread count when set) and
+`--device auto` (tries GPU, falls back to CPU). The local conda env's `hoomd` build here is the
+`gpu` conda-forge variant; a CPU-only cluster should get its own env built from the `cpu` variant
+instead of transplanting this one.
+
+## Running on a SLURM cluster
+
+`slurm/submit_batch_array.sh <run_dir> [throttle]` sizes a SLURM array job from an existing
+`job_manifest.csv` (produced by `generate_jobs.py` same as for a local run) and submits
+`slurm/submit_array.sh` as that array — each array task runs exactly one `task_id`, mirroring
+what `run_local.py` does sequentially for a local run. Cluster-specific bits (module name,
+partition/qos, `--cpus-per-task`, `--time`) are placeholders in `submit_array.sh` marked `EDIT`
+— they were templated from a PI's Stokes (UCF) scripts in `slurm_examples/` but not verified
+against live cluster docs. There is no checkpoint/restart in `simulation.py`: a task killed by
+hitting `--time` loses all progress and must restart from scratch, so size `--time` from the
+longest sequence in the batch, not the average, and calibrate CPU throughput with one real job
+before committing to a walltime/array size for a large batch.
 
 There is no test suite, linter, or formatter configured in this repo. `src/test.py` is a
 throwaway scratch/debug script (prints `project_root`), not a real test — don't treat it as one.

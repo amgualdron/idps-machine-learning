@@ -1,0 +1,13 @@
+{
+  "task_id": 4,
+  "status": "completed",
+  "seed": 2626,
+  "KT": 0.592187,
+  "equilibration_steps": 200153811,
+  "production_steps": 800615244,
+  "total_steps": 1000769055,
+  "trajectory_file": "runs/benchmark81_100_full_run_0927/trajectories/Tau_ht23_traj_4.gsd",
+  "wall_time_s": 142201,
+  "n_frames": 3000,
+  "completed_at": "2026-10-03T07:39:17"
+}

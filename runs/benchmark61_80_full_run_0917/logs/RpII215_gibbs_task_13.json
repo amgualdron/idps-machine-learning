@@ -1,4 +1,13 @@
 {
   "task_id": 13,
-  "status": "pending"
+  "status": "completed",
+  "seed": 9722,
+  "KT": 0.592187,
+  "equilibration_steps": 6669676,
+  "production_steps": 26678706,
+  "total_steps": 33348382,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/RpII215_gibbs_traj_13.gsd",
+  "wall_time_s": 2540,
+  "n_frames": 3000,
+  "completed_at": "2026-09-21T16:02:55"
 }

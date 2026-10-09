@@ -1,4 +1,5 @@
 import argparse
+import os
 import pandas as pd
 import json
 import time
@@ -44,6 +45,15 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--manifest", required=True, help="Path to jobs_manifest.csv")
     parser.add_argument("--task_id", type=int, required=True, help="Task ID to execute")
+    parser.add_argument(
+        "--device",
+        choices=["gpu", "cpu", "auto"],
+        default="gpu",
+        help="Compute device. 'gpu' (default, preserves prior behavior) requires a CUDA "
+             "GPU; 'cpu' runs on CPU threads (reads SLURM_CPUS_PER_TASK when set, else "
+             "lets HOOMD auto-select); 'auto' tries GPU and falls back to CPU if none "
+             "is visible.",
+    )
     args = parser.parse_args()
 
     manifest_path = Path(args.manifest)
@@ -141,7 +151,19 @@ def main():
     GSD_FILE = str(RUN_DIR / "trajectories" / f"{name}_traj_{args.task_id}.gsd")
 
     # ── Build snapshot ────────────────────────────────────────────────────────────
-    device = hoomd.device.GPU()
+    num_cpu_threads = None
+    if os.environ.get("SLURM_CPUS_PER_TASK"):
+        num_cpu_threads = int(os.environ["SLURM_CPUS_PER_TASK"])
+
+    if args.device == "gpu":
+        device = hoomd.device.GPU()
+    elif args.device == "cpu":
+        device = hoomd.device.CPU(num_cpu_threads=num_cpu_threads)
+    else:  # auto
+        try:
+            device = hoomd.device.GPU()
+        except RuntimeError:
+            device = hoomd.device.CPU(num_cpu_threads=num_cpu_threads)
     seed = int(row["seed"])
     sim = hoomd.Simulation(device=device, seed=seed)
 

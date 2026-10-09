@@ -1,4 +1,13 @@
 {
   "task_id": 14,
-  "status": "pending"
+  "status": "completed",
+  "seed": 5473,
+  "KT": 0.592187,
+  "equilibration_steps": 153500611,
+  "production_steps": 614002447,
+  "total_steps": 767503058,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/RpII215_portz_traj_14.gsd",
+  "wall_time_s": 96650,
+  "n_frames": 3000,
+  "completed_at": "2026-09-22T18:53:46"
 }

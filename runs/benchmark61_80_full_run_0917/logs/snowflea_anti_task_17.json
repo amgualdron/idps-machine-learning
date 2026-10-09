@@ -1,4 +1,13 @@
 {
   "task_id": 17,
-  "status": "pending"
+  "status": "completed",
+  "seed": 1019,
+  "KT": 0.592187,
+  "equilibration_steps": 7900181,
+  "production_steps": 31600724,
+  "total_steps": 39500905,
+  "trajectory_file": "runs/benchmark61_80_full_run_0917/trajectories/snowflea_anti_traj_17.gsd",
+  "wall_time_s": 2965,
+  "n_frames": 3000,
+  "completed_at": "2026-09-22T21:39:19"
 }
